@@ -535,6 +535,13 @@ class Chatbot {
     }
 
     async generateBotResponse(userMessage) {
+        if (!this.llmConfig || !this.llmConfig.apiKey) {
+            this.updateStatus('error', 'Configuration required');
+            this.addBotMessage('Add an API key first. Click the ⚙️ button, choose a provider, and save your configuration. The key is stored only in this browser.');
+            this.showModal();
+            return;
+        }
+
         if (this.llmConfig && this.currentModel) {
             try {
                 this.updateStatus('generating', 'Connecting to AI...');

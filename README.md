@@ -70,6 +70,12 @@ Extensible function calling system supporting multiple tool types:
 
 ## Installation and Setup
 
+### Live Demo Configuration
+
+The GitHub Pages demo is a static client-side application, so it does not include a shared API key. Click the **⚙️** button in the demo, select an OpenAI-compatible provider, enter your own API key, and save the configuration before sending a message. The key is stored in your browser's local storage and is not committed to this repository.
+
+Never place a personal API key directly in `index.html` or `chatbot.js`. For a production multi-user deployment, add a server-side proxy with authentication and keep provider keys in server environment variables.
+
 ### Prerequisites
 - Modern web browser with ES6+ support
 - HTTP server (for local development)
