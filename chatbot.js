@@ -38,6 +38,14 @@ class Chatbot {
         this.setupMarkdownRenderer();
     }
 
+    normalizeApiKey(value) {
+        return String(value || '')
+            .trim()
+            .replace(/^Bearer\s+/i, '')
+            .replace(/^['"]|['"]$/g, '')
+            .trim();
+    }
+
     setupEventListeners() {
         this.sendButton.addEventListener('click', () => this.sendMessage());
         this.chatInput.addEventListener('keypress', (e) => {
@@ -252,6 +260,7 @@ class Chatbot {
         if (saved) {
             try {
                 this.llmConfig = JSON.parse(saved);
+                this.llmConfig.apiKey = this.normalizeApiKey(this.llmConfig.apiKey);
                 // Ensure selectedModels exists for backward compatibility
                 if (!this.llmConfig.selectedModels) {
                     this.llmConfig.selectedModels = this.llmConfig.models || [];
@@ -364,7 +373,7 @@ class Chatbot {
             baseUrl = this.providerSelect.value;
         }
         
-        const apiKey = this.apiKeyInput.value.trim();
+        const apiKey = this.normalizeApiKey(this.apiKeyInput.value);
         if (!apiKey) {
             window.bootstrapAlert({ title: 'Configuration Error', body: 'Please enter an API key.', color: 'danger' });
             return;
@@ -403,7 +412,7 @@ class Chatbot {
                 console.log('Could not fetch models, using selected models');
                 window.bootstrapAlert({ 
                     title: 'Model Fetch Warning', 
-                    body: 'Could not fetch models from API. Using selected models.', 
+                    body: 'Could not fetch models. Check that the provider URL and raw API token are correct.',
                     color: 'warning' 
                 });
             }
@@ -554,7 +563,9 @@ class Chatbot {
                 console.error('LLM API error:', error);
                 window.bootstrapAlert({ 
                     title: 'API Error', 
-                    body: `Failed to generate response: ${error.message}`, 
+                    body: error.message.includes('JWSInvalid') || error.message.toLowerCase().includes('invalid token')
+                        ? 'The provider rejected this token. Enter the raw token only — do not include “Bearer ” — and check that it has not expired.'
+                        : `Failed to generate response: ${error.message}`,
                     color: 'danger',
                     autohide: false
                 });
