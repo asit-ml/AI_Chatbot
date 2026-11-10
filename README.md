@@ -1,6 +1,6 @@
 # AI Chatbot with Code Execution & Web Search
 
-Live demo: https://23f1000318.github.io/AI_Chatbot/
+Live demo: https://asit-ml.github.io/AI_Chatbot/
 
 A JavaScript-based chatbot interface implementing secure code execution, web search capabilities, and advanced markdown rendering with comprehensive error handling and multi-provider LLM integration.
 
